@@ -64,17 +64,26 @@ describe('StartIO ID System', function () {
   });
 
   describe('getId', function () {
-    it('should log an error if no endpoint configured', function () {
+    it('should return callback and fire ajax even if no endpoint configured', function () {
       const config = { params: {} };
-      startioIdSubmodule.getId(config);
-      expect(utils.logError.calledOnce).to.be.true;
-      expect(utils.logError.args[0][0]).to.include('requires an endpoint');
+      const result = startioIdSubmodule.getId(config);
+      expect(result).to.have.property('callback');
+      expect(typeof result.callback).to.equal('function');
+
+      const callbackSpy = sinon.spy();
+      result.callback(callbackSpy);
+      expect(server.requests.length).to.equal(1);
     });
 
-    it('should log an error if endpoint is not a string', function () {
+    it('should return callback and fire ajax even if endpoint is not a string', function () {
       const config = { params: { endpoint: 123 } };
-      startioIdSubmodule.getId(config);
-      expect(utils.logError.calledOnce).to.be.true;
+      const result = startioIdSubmodule.getId(config);
+      expect(result).to.have.property('callback');
+      expect(typeof result.callback).to.equal('function');
+
+      const callbackSpy = sinon.spy();
+      result.callback(callbackSpy);
+      expect(server.requests.length).to.equal(1);
     });
 
     it('should return existing storedId immediately if provided', function () {

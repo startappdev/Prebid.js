@@ -5,6 +5,7 @@ import { getStorageManager, STORAGE_TYPE_COOKIES, STORAGE_TYPE_LOCALSTORAGE } fr
 import { MODULE_TYPE_UID } from '../src/activities/modules.js';
 
 const MODULE_NAME = 'startioId';
+const DEFAULT_ENDPOINT = '';
 export const storage = getStorageManager({ moduleType: MODULE_TYPE_UID, moduleName: MODULE_NAME });
 
 function storeId(id, storageConfig = {}) {
@@ -33,14 +34,10 @@ export const startioIdSubmodule = {
   getId(config, consentData, storedId) {
     const configParams = (config && config.params) || {};
     const storageConfig = (config && config.storage) || {};
+    const endpoint = configParams.endpoint || DEFAULT_ENDPOINT;
 
     if (storedId) {
       return { id: storedId };
-    }
-
-    if (!configParams.endpoint || typeof configParams.endpoint !== 'string') {
-      logError(`${MODULE_NAME} module requires an endpoint parameter.`);
-      return;
     }
 
     const resp = function (callback) {
@@ -65,7 +62,7 @@ export const startioIdSubmodule = {
           callback();
         }
       };
-      ajax(configParams.endpoint, callbacks, undefined, { method: 'GET' });
+      ajax(endpoint, callbacks, undefined, { method: 'GET' });
     };
     return { callback: resp };
   },
