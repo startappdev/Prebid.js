@@ -1,6 +1,7 @@
 import * as utils from '../../../src/utils.js';
 import { server } from 'test/mocks/xhr.js';
-import { startioIdSubmodule, storage } from 'modules/startioSystem.js';
+import { startioIdSubmodule } from 'modules/startioSystem.js';
+import { createEidsArray } from '../../../modules/userId/eids.js';
 
 describe('StartIO ID System', function () {
   let sandbox;
@@ -17,12 +18,6 @@ describe('StartIO ID System', function () {
   beforeEach(function () {
     sandbox = sinon.createSandbox();
     sandbox.stub(utils, 'logError');
-    sandbox.stub(storage, 'getCookie').returns(null);
-    sandbox.stub(storage, 'setCookie');
-    sandbox.stub(storage, 'getDataFromLocalStorage').returns(null);
-    sandbox.stub(storage, 'setDataInLocalStorage');
-    sandbox.stub(storage, 'cookiesAreEnabled').returns(true);
-    sandbox.stub(storage, 'localStorageIsEnabled').returns(true);
   });
 
   afterEach(function () {
@@ -60,6 +55,24 @@ describe('StartIO ID System', function () {
       const id = 'test-uuid-12345';
       const result = startioIdSubmodule.decode(id);
       expect(result).to.deep.equal({ 'startioId': id });
+    });
+  });
+
+  describe('eid', function () {
+    it('should generate correct EID', function () {
+      const TEST_UID = 'test-uid-value';
+      const eids = createEidsArray(startioIdSubmodule.decode(TEST_UID), new Map(Object.entries(startioIdSubmodule.eids)));
+      expect(eids).to.eql([
+        {
+          source: 'start.io',
+          uids: [
+            {
+              atype: 3,
+              id: TEST_UID
+            }
+          ]
+        }
+      ]);
     });
   });
 
@@ -115,48 +128,6 @@ describe('StartIO ID System', function () {
       expect(callbackSpy.lastCall.lastArg).to.equal(serverId);
     });
 
-    it('should store new ID in both cookie and localStorage by default', function () {
-      const callbackSpy = sinon.spy();
-      const callback = startioIdSubmodule.getId(validConfig).callback;
-      callback(callbackSpy);
-
-      const serverId = 'new-server-id-12345';
-      server.requests[0].respond(200, { 'Content-Type': 'application/json' }, JSON.stringify({ id: serverId }));
-
-      expect(storage.setCookie.calledOnce).to.be.true;
-      expect(storage.setCookie.args[0][0]).to.equal('startioId');
-      expect(storage.setCookie.args[0][1]).to.equal(serverId);
-      expect(storage.setDataInLocalStorage.calledOnce).to.be.true;
-      expect(storage.setDataInLocalStorage.args[0][0]).to.equal('startioId');
-      expect(storage.setDataInLocalStorage.args[0][1]).to.equal(serverId);
-    });
-
-    it('should store only in cookie when storage type is cookie', function () {
-      const config = { ...validConfig, storage: { ...validConfig.storage, type: 'cookie' } };
-      const callbackSpy = sinon.spy();
-      const callback = startioIdSubmodule.getId(config).callback;
-      callback(callbackSpy);
-
-      const serverId = 'new-server-id-12345';
-      server.requests[0].respond(200, { 'Content-Type': 'application/json' }, JSON.stringify({ id: serverId }));
-
-      expect(storage.setCookie.calledOnce).to.be.true;
-      expect(storage.setDataInLocalStorage.called).to.be.false;
-    });
-
-    it('should store only in localStorage when storage type is html5', function () {
-      const config = { ...validConfig, storage: { ...validConfig.storage, type: 'html5' } };
-      const callbackSpy = sinon.spy();
-      const callback = startioIdSubmodule.getId(config).callback;
-      callback(callbackSpy);
-
-      const serverId = 'new-server-id-12345';
-      server.requests[0].respond(200, { 'Content-Type': 'application/json' }, JSON.stringify({ id: serverId }));
-
-      expect(storage.setCookie.called).to.be.false;
-      expect(storage.setDataInLocalStorage.calledOnce).to.be.true;
-    });
-
     it('should log error if server response is missing id field', function () {
       const callbackSpy = sinon.spy();
       const callback = startioIdSubmodule.getId(validConfig).callback;
@@ -191,36 +162,6 @@ describe('StartIO ID System', function () {
 
       expect(utils.logError.calledOnce).to.be.true;
       expect(utils.logError.args[0][0]).to.include('encountered an error');
-    });
-
-    it('should not store in cookie if cookies are disabled', function () {
-      storage.cookiesAreEnabled.returns(false);
-
-      const callbackSpy = sinon.spy();
-      const callback = startioIdSubmodule.getId(validConfig).callback;
-      callback(callbackSpy);
-
-      const request = server.requests[0];
-      const serverId = 'new-server-id-12345';
-      request.respond(200, { 'Content-Type': 'application/json' }, JSON.stringify({ id: serverId }));
-
-      expect(storage.setCookie.called).to.be.false;
-      expect(storage.setDataInLocalStorage.calledOnce).to.be.true;
-    });
-
-    it('should not store in localStorage if localStorage is disabled', function () {
-      storage.localStorageIsEnabled.returns(false);
-
-      const callbackSpy = sinon.spy();
-      const callback = startioIdSubmodule.getId(validConfig).callback;
-      callback(callbackSpy);
-
-      const request = server.requests[0];
-      const serverId = 'new-server-id-12345';
-      request.respond(200, { 'Content-Type': 'application/json' }, JSON.stringify({ id: serverId }));
-
-      expect(storage.setCookie.calledOnce).to.be.true;
-      expect(storage.setDataInLocalStorage.called).to.be.false;
     });
   });
 });

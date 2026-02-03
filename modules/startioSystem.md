@@ -34,7 +34,8 @@ The below parameters apply only to the Start.io User ID integration.
 | params | Required | Object | Container of all module params. | |
 | params.endpoint | Required | String | The URL of the Start.io ID endpoint. Must return a JSON object with an `id` field. | `"https://id.startio.example.com/uid"` |
 | storage | Optional | Object | Controls how the ID is persisted. Managed by Prebid.js core; see notes below. | |
-| storage.type | Optional | String | Storage mechanism. Accepts `cookie`, `html5`, or `cookie&html5`. Defaults to both when omitted. | `"cookie&html5"` |
+| storage.name | Required | String | The cookie or local-storage key used to persist the ID. Must match the module name. | `"startioId"` |
+| storage.type | Optional | String | Storage mechanism. `"cookie"` for cookies only, `"html5"` for localStorage only. Omit to use both. | `"html5"` |
 | storage.expires | Optional | Number | Cookie / storage TTL in days. Defaults to `365`. | `365` |
 
 ## Server Response Format

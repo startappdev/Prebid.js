@@ -1,28 +1,15 @@
+/**
+ * This module adds startio ID support to the User ID module
+ * The {@link module:modules/userId} module is required
+ * @module modules/startioSystem
+ * @requires module:modules/userId
+ */
 import { logError } from '../src/utils.js';
 import { submodule } from '../src/hook.js';
 import { ajax } from '../src/ajax.js';
-import { getStorageManager, STORAGE_TYPE_COOKIES, STORAGE_TYPE_LOCALSTORAGE } from '../src/storageManager.js';
-import { MODULE_TYPE_UID } from '../src/activities/modules.js';
 
 const MODULE_NAME = 'startioId';
 const DEFAULT_ENDPOINT = '';
-export const storage = getStorageManager({ moduleType: MODULE_TYPE_UID, moduleName: MODULE_NAME });
-
-function storeId(id, storageConfig = {}) {
-  const expires = storageConfig.expires || 365;
-  const expirationDate = new Date(Date.now() + (expires * 24 * 60 * 60 * 1000));
-  const storageType = storageConfig.type || '';
-  const useCookie = !storageType || storageType.includes(STORAGE_TYPE_COOKIES);
-  const useLocalStorage = !storageType || storageType.includes(STORAGE_TYPE_LOCALSTORAGE);
-
-  if (useCookie && storage.cookiesAreEnabled()) {
-    storage.setCookie(MODULE_NAME, id, expirationDate.toUTCString());
-  }
-
-  if (useLocalStorage && storage.localStorageIsEnabled()) {
-    storage.setDataInLocalStorage(MODULE_NAME, id);
-  }
-}
 
 export const startioIdSubmodule = {
   name: MODULE_NAME,
@@ -33,7 +20,6 @@ export const startioIdSubmodule = {
   },
   getId(config, consentData, storedId) {
     const configParams = (config && config.params) || {};
-    const storageConfig = (config && config.storage) || {};
     const endpoint = configParams.endpoint || DEFAULT_ENDPOINT;
 
     if (storedId) {
@@ -48,7 +34,6 @@ export const startioIdSubmodule = {
             const responseObj = JSON.parse(response);
             if (responseObj && responseObj.id) {
               responseId = responseObj.id;
-              storeId(responseId, storageConfig);
             } else {
               logError(`${MODULE_NAME}: Server response missing 'id' field`);
             }
