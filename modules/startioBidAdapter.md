@@ -94,6 +94,25 @@ var nativeAdUnits = [
 ];
 ```
 
+# User Syncs
+
+The adapter supports iframe-based user syncing. When `iframeEnabled` is set to `true` in the sync options, the adapter returns a single iframe sync URL. GDPR, USP (CCPA), and GPP consent strings are automatically appended as query parameters when present.
+
+```
+pbjs.setConfig({
+  userSync: {
+    iframeEnabled: true
+  }
+});
+```
+
+**Consent parameters included in the sync URL (when available):**
+- `gdpr` – `1` if GDPR applies, `0` otherwise
+- `gdpr_consent` – the TCF consent string
+- `us_privacy` – the USP/CCPA consent string (e.g. `1YNN`)
+- `gpp` – the GPP consent string
+- `gpp_sections` – applicable GPP section IDs
+
 # Additional Notes
 - The adapter processes requests via OpenRTB 2.5 standards.
 - Ensure that the `accountId` parameter is set correctly for your integration.
