@@ -10,15 +10,7 @@ For integration support, contact prebid@start.io.
 pbjs.setConfig({
     userSync: {
         userIds: [{
-            name: 'startioId',
-            params: {
-                endpoint: 'https://your-startio-endpoint.example.com/id'
-            },
-            storage: {
-                type: 'html5', //or 'cookie', or 'cookie&html5',
-                name: 'startioId',
-                expires: 365
-            }
+            name: 'startioId'
         }]
     }
 });
@@ -31,12 +23,6 @@ The below parameters apply only to the Start.io User ID integration.
 | Param under userSync.userIds[] | Scope | Type | Description | Example |
 | --- | --- | --- | --- | --- |
 | name | Required | String | The name of this module. | `"startioId"` |
-| params | Required | Object | Container of all module params. | |
-| params.endpoint | Required | String | The URL of the Start.io ID endpoint. Must return a JSON object with an `id` field. | `"https://id.startio.example.com/uid"` |
-| storage | Optional | Object | Controls how the ID is persisted. Managed by Prebid.js core; see notes below. | |
-| storage.name | Required | String | The cookie or local-storage key used to persist the ID. Must match the module name. | `"startioId"` |
-| storage.type | Optional | String | Storage mechanism. `"cookie"` for cookies only, `"html5"` for localStorage only. Omit to use both. | `"html5"` |
-| storage.expires | Optional | Number | Cookie / storage TTL in days. Defaults to `365`. | `365` |
 
 ## Server Response Format
 
