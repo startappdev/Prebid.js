@@ -9,7 +9,7 @@ import { submodule } from '../src/hook.js';
 import { ajax } from '../src/ajax.js';
 
 const MODULE_NAME = 'startioId';
-const DEFAULT_ENDPOINT = '';
+const DEFAULT_ENDPOINT = 'https://cs.startappnetwork.com/get-uid-obj?p=1002';
 
 export const startioIdSubmodule = {
   name: MODULE_NAME,
@@ -19,9 +19,6 @@ export const startioIdSubmodule = {
       : undefined;
   },
   getId(config, consentData, storedId) {
-    const configParams = (config && config.params) || {};
-    const endpoint = configParams.endpoint || DEFAULT_ENDPOINT;
-
     if (storedId) {
       return { id: storedId };
     }
@@ -47,7 +44,7 @@ export const startioIdSubmodule = {
           callback();
         }
       };
-      ajax(endpoint, callbacks, undefined, { method: 'GET' });
+      ajax(DEFAULT_ENDPOINT, callbacks, undefined, { method: 'GET' });
     };
     return { callback: resp };
   },

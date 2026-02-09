@@ -8,7 +8,7 @@ describe('StartIO ID System', function () {
 
   const validConfig = {
     params: {
-      endpoint: 'https://test-endpoint.start.io/getId'
+      endpoint: 'https://cs.startappnetwork.com/get-uid-obj?p=1002'
     },
     storage: {
       expires: 365

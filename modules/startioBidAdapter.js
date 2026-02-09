@@ -9,7 +9,7 @@ const BIDDER_CODE = 'startio';
 const METHOD = 'POST';
 const GVLID = 1216;
 const ENDPOINT_URL = `https://pbc-rtb.startappnetwork.com/1.3/2.5/getbid?account=pbc`;
-const IFRAME_URL = 'test';
+const IFRAME_URL = 'https://cs.startappnetwork.com/sync?p=1002';
 
 const converter = ortbConverter({
   imp(buildImp, bidRequest, context) {
@@ -160,7 +160,7 @@ export const spec = {
     if (syncOptions.iframeEnabled) {
       const consentParams = getUserSyncParams(gdprConsent, uspConsent, gppConsent);
       const queryString = formatQS(consentParams);
-      const queryParam = queryString ? `?${queryString}` : '';
+      const queryParam = queryString ? `&${queryString}` : '';
 
       syncs.push({
         type: 'iframe',
@@ -173,3 +173,8 @@ export const spec = {
 };
 
 registerBidder(spec);
+
+// Expose spec for testing purposes in browser environment
+if (typeof window !== 'undefined') {
+  window.startioAdapterSpec = spec;
+}
