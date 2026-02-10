@@ -173,8 +173,3 @@ export const spec = {
 };
 
 registerBidder(spec);
-
-// Expose spec for testing purposes in browser environment
-if (typeof window !== 'undefined') {
-  window.startioAdapterSpec = spec;
-}
