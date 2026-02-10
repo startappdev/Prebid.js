@@ -45,7 +45,6 @@ function storeId(id) {
 
   if (storage.hasLocalStorage()) {
     storage.setDataInLocalStorage(`${MODULE_NAME}_exp`, expirationDate);
-    storage.setDataInLocalStorage(`${MODULE_NAME}_last`, new Date().toUTCString());
     storage.setDataInLocalStorage(MODULE_NAME, id);
   }
 }

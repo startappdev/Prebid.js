@@ -27,7 +27,6 @@ describe('StartIO ID System', function () {
     if (storage.hasLocalStorage()) {
       storage.removeDataFromLocalStorage('startioId');
       storage.removeDataFromLocalStorage('startioId_exp');
-      storage.removeDataFromLocalStorage('startioId_last');
     }
   });
 
