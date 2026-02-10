@@ -35,8 +35,8 @@ function getCachedId() {
   return cachedId || null;
 }
 
-function storeId(id) {
-  const expiresInDays = 90;
+function storeId(id, expiresInDays) {
+  expiresInDays = expiresInDays || 90;
   const expirationDate = new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000).toUTCString();
 
   if (storage.cookiesAreEnabled()) {
@@ -49,7 +49,7 @@ function storeId(id) {
   }
 }
 
-function fetchIdFromServer(callback) {
+function fetchIdFromServer(callback, expiresInDays) {
   const callbacks = {
     success: response => {
       let responseId;
@@ -57,7 +57,7 @@ function fetchIdFromServer(callback) {
         const responseObj = JSON.parse(response);
         if (responseObj && responseObj.uid) {
           responseId = responseObj.uid;
-          storeId(responseId);
+          storeId(responseId, expiresInDays);
         } else {
           logError(`${MODULE_NAME}: Server response missing 'uid' field`);
         }
@@ -90,8 +90,11 @@ export const startioIdSubmodule = {
     if (cachedId) {
       return { id: cachedId };
     }
-
-    return { callback: fetchIdFromServer };
+    // eslint-disable-next-line no-debugger
+    debugger
+    const storageConfig = config && config.storage;
+    const expiresInDays = storageConfig && storageConfig.expires;
+    return { callback: (cb) => fetchIdFromServer(cb, expiresInDays) };
   },
 
   eids: {
