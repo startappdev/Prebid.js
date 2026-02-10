@@ -94,15 +94,23 @@ var nativeAdUnits = [
 ];
 ```
 
-# User Syncs
+### Prebid Params Enabling User Sync
 
-The adapter supports iframe-based user syncing. When `iframeEnabled` is set to `true` in the sync options, the adapter returns a single iframe sync URL. GDPR, USP (CCPA), and GPP consent strings are automatically appended as query parameters when present.
+To enable iframe-based user syncing for Start.io, include the `filterSettings` configuration in your `userSync` setup:
 
-```
+```javascript
 pbjs.setConfig({
-  userSync: {
-    iframeEnabled: true
-  }
+    userSync: {
+        userIds: [{
+            name: 'startioId'
+        }],
+        filterSettings: {
+            iframe: {
+                bidders: ['startio'],
+                filter: 'include'
+            }
+        }
+    }
 });
 ```
 
