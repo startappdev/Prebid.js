@@ -36,15 +36,15 @@ The below parameters apply only to the Start.io User ID integration.
 
 ## Server Response Format
 
-The endpoint specified in `params.endpoint` must return a JSON response containing an `id` field:
+The endpoint specified in `params.endpoint` must return a JSON response containing an `uid` field:
 
 ```
 {
-  "id": "unique-user-identifier-string"
+  "uid": "unique-user-identifier-string"
 }
 ```
 
-If the `id` field is missing or the response cannot be parsed, the module logs an error and does not store a value.
+If the `uid` field is missing or the response cannot be parsed, the module logs an error and does not store a value.
 
 ## How It Works
 
