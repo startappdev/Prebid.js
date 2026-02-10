@@ -90,8 +90,6 @@ export const startioIdSubmodule = {
     if (cachedId) {
       return { id: cachedId };
     }
-    // eslint-disable-next-line no-debugger
-    debugger
     const storageConfig = config && config.storage;
     const expiresInDays = storageConfig && storageConfig.expires;
     return { callback: (cb) => fetchIdFromServer(cb, expiresInDays) };
