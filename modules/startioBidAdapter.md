@@ -114,13 +114,6 @@ pbjs.setConfig({
 });
 ```
 
-**Consent parameters included in the sync URL (when available):**
-- `gdpr` – `1` if GDPR applies, `0` otherwise
-- `gdpr_consent` – the TCF consent string
-- `us_privacy` – the USP/CCPA consent string (e.g. `1YNN`)
-- `gpp` – the GPP consent string
-- `gpp_sections` – applicable GPP section IDs
-
 # Additional Notes
 - The adapter processes requests via OpenRTB 2.5 standards.
 - Ensure that the `publisherId` parameter is set correctly for your integration.
