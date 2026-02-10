@@ -36,7 +36,7 @@ function getCachedId() {
 }
 
 function storeId(id, expiresInDays) {
-  expiresInDays = expiresInDays || 90;
+  expiresInDays = expiresInDays || 9;
   const expirationDate = new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000).toUTCString();
 
   if (storage.cookiesAreEnabled()) {
