@@ -4,17 +4,27 @@ The Start.io User ID submodule generates and persists a unique user identifier b
 
 For integration support, contact prebid@start.io.
 
-### Prebid Params
+### Prebid Params Enabling User Sync
 
-```
+To enable iframe-based user syncing for Start.io, include the `filterSettings` configuration in your `userSync` setup:
+
+```javascript
 pbjs.setConfig({
     userSync: {
         userIds: [{
             name: 'startioId'
-        }]
+        }],
+        filterSettings: {
+            iframe: {
+                bidders: ['startio'],
+                filter: 'include'
+            }
+        }
     }
 });
 ```
+
+This configuration allows Start.io to sync user data via iframe, which is necessary for cross-domain user identification.
 
 ## Parameter Descriptions for the `userSync` Configuration Section
 

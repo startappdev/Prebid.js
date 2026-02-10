@@ -2,14 +2,14 @@ import * as utils from '../../../src/utils.js';
 import { server } from 'test/mocks/xhr.js';
 import { startioIdSubmodule } from 'modules/startioSystem.js';
 import { createEidsArray } from '../../../modules/userId/eids.js';
+import { getStorageManager } from '../../../src/storageManager.js';
 
 describe('StartIO ID System', function () {
   let sandbox;
+  let storage;
 
   const validConfig = {
-    params: {
-      endpoint: 'https://cs.startappnetwork.com/get-uid-obj?p=1002'
-    },
+    params: {},
     storage: {
       expires: 365
     }
@@ -18,6 +18,17 @@ describe('StartIO ID System', function () {
   beforeEach(function () {
     sandbox = sinon.createSandbox();
     sandbox.stub(utils, 'logError');
+    storage = getStorageManager({ moduleType: 'userId', moduleName: 'startioId' });
+
+    // Clear any cached storage
+    if (storage.cookiesAreEnabled()) {
+      storage.setCookie('startioId', '', new Date(0).toUTCString());
+    }
+    if (storage.hasLocalStorage()) {
+      storage.removeDataFromLocalStorage('startioId');
+      storage.removeDataFromLocalStorage('startioId_exp');
+      storage.removeDataFromLocalStorage('startioId_last');
+    }
   });
 
   afterEach(function () {
@@ -119,16 +130,16 @@ describe('StartIO ID System', function () {
 
       const request = server.requests[0];
       expect(request.method).to.eq('GET');
-      expect(request.url).to.eq(validConfig.params.endpoint);
+      expect(request.url).to.eq('https://cs.startappnetwork.com/get-uid-obj?p=1002');
 
       const serverId = 'new-server-id-12345';
-      request.respond(200, { 'Content-Type': 'application/json' }, JSON.stringify({ id: serverId }));
+      request.respond(200, { 'Content-Type': 'application/json' }, JSON.stringify({ uid: serverId }));
 
       expect(callbackSpy.calledOnce).to.be.true;
       expect(callbackSpy.lastCall.lastArg).to.equal(serverId);
     });
 
-    it('should log error if server response is missing id field', function () {
+    it('should log error if server response is missing uid field', function () {
       const callbackSpy = sinon.spy();
       const callback = startioIdSubmodule.getId(validConfig).callback;
       callback(callbackSpy);
@@ -137,7 +148,7 @@ describe('StartIO ID System', function () {
       request.respond(200, { 'Content-Type': 'application/json' }, JSON.stringify({ wrongField: 'value' }));
 
       expect(utils.logError.calledOnce).to.be.true;
-      expect(utils.logError.args[0][0]).to.include('missing \'id\' field');
+      expect(utils.logError.args[0][0]).to.include('missing \'uid\' field');
     });
 
     it('should log error if server response is invalid JSON', function () {
