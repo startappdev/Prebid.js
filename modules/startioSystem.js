@@ -98,7 +98,7 @@ export const startioIdSubmodule = {
   eids: {
     'startioId': {
       source: 'start.io',
-      atype: 3
+      atype: 1
     },
   }
 };
