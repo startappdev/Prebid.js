@@ -9,7 +9,7 @@ const BIDDER_CODE = 'startio';
 const METHOD = 'POST';
 const GVLID = 1216;
 const ENDPOINT_URL = `https://pbc-rtb.startappnetwork.com/1.3/2.5/getbid?account=pbc`;
-const IFRAME_URL = 'https://cs.startappnetwork.com/sync?p=1002';
+const IFRAME_URL = 'https://cs.startappnetwork.com/sync?p=m4b8b3y4';
 
 const converter = ortbConverter({
   imp(buildImp, bidRequest, context) {

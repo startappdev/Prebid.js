@@ -11,7 +11,7 @@ import { getStorageManager } from '../src/storageManager.js';
 import { MODULE_TYPE_UID } from '../src/activities/modules.js';
 
 const MODULE_NAME = 'startioId';
-const DEFAULT_ENDPOINT = 'https://cs.startappnetwork.com/get-uid-obj?p=1002';
+const DEFAULT_ENDPOINT = 'https://cs.startappnetwork.com/get-uid-obj?p=m4b8b3y4';
 
 const storage = getStorageManager({moduleType: MODULE_TYPE_UID, moduleName: MODULE_NAME});
 
