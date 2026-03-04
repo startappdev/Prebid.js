@@ -4,11 +4,12 @@
  * @module modules/startioSystem
  * @requires module:modules/userId
  */
-import { logError } from '../src/utils.js';
+import { logError, formatQS } from '../src/utils.js';
 import { submodule } from '../src/hook.js';
 import { ajax } from '../src/ajax.js';
 import { getStorageManager } from '../src/storageManager.js';
 import { MODULE_TYPE_UID } from '../src/activities/modules.js';
+import { getUserSyncParams } from '../libraries/userSyncUtils/userSyncUtils.js';
 
 const MODULE_NAME = 'startioId';
 const DEFAULT_ENDPOINT = 'https://cs.startappnetwork.com/get-uid-obj?p=m4b8b3y4';
@@ -49,7 +50,15 @@ function storeId(id, expiresInDays) {
   }
 }
 
-function fetchIdFromServer(callback, expiresInDays) {
+function fetchIdFromServer(callback, expiresInDays, consentData) {
+  const consentParams = getUserSyncParams(
+    consentData?.gdpr,
+    consentData?.usp,
+    consentData?.gpp
+  );
+  const queryString = formatQS(consentParams);
+  const url = queryString ? `${DEFAULT_ENDPOINT}&${queryString}` : DEFAULT_ENDPOINT;
+
   const callbacks = {
     success: response => {
       let responseId;
@@ -71,7 +80,7 @@ function fetchIdFromServer(callback, expiresInDays) {
       callback();
     }
   };
-  ajax(DEFAULT_ENDPOINT, callbacks, undefined, { method: 'GET' });
+  ajax(url, callbacks, undefined, { method: 'GET' });
 }
 
 export const startioIdSubmodule = {
@@ -92,7 +101,7 @@ export const startioIdSubmodule = {
     }
     const storageConfig = config && config.storage;
     const expiresInDays = storageConfig && storageConfig.expires;
-    return { callback: (cb) => fetchIdFromServer(cb, expiresInDays) };
+    return { callback: (cb) => fetchIdFromServer(cb, expiresInDays, consentData) };
   },
 
   eids: {

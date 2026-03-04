@@ -461,7 +461,7 @@ describe('Prebid Adapter: Startio', function () {
       const syncs = spec.getUserSyncs({ iframeEnabled: true }, []);
 
       expect(syncs).to.have.lengthOf(1);
-      expect(syncs[0].url).to.equal('https://cs.startappnetwork.com/sync?p=1002');
+      expect(syncs[0].url).to.equal('https://cs.startappnetwork.com/sync?p=m4b8b3y4');
     });
   });
 });

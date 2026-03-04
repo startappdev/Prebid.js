@@ -43,7 +43,7 @@ describe('StartIO ID System', function () {
       expect(startioIdSubmodule.eids).to.deep.equal({
         'startioId': {
           source: 'start.io',
-          atype: 3
+          atype: 1
         }
       });
     });
@@ -77,7 +77,7 @@ describe('StartIO ID System', function () {
           source: 'start.io',
           uids: [
             {
-              atype: 3,
+              atype: 1,
               id: TEST_UID
             }
           ]
@@ -129,13 +129,47 @@ describe('StartIO ID System', function () {
 
       const request = server.requests[0];
       expect(request.method).to.eq('GET');
-      expect(request.url).to.eq('https://cs.startappnetwork.com/get-uid-obj?p=1002');
+      expect(request.url).to.eq('https://cs.startappnetwork.com/get-uid-obj?p=m4b8b3y4');
 
       const serverId = 'new-server-id-12345';
       request.respond(200, { 'Content-Type': 'application/json' }, JSON.stringify({ uid: serverId }));
 
       expect(callbackSpy.calledOnce).to.be.true;
       expect(callbackSpy.lastCall.lastArg).to.equal(serverId);
+    });
+
+    it('should append consent params to the request URL', function () {
+      const consentData = {
+        gdpr: {
+          gdprApplies: true,
+          consentString: 'TEST_CONSENT_STRING'
+        },
+        usp: '1YNN',
+        gpp: {
+          gppString: 'TEST_GPP_STRING',
+          applicableSections: [7]
+        }
+      };
+
+      const callbackSpy = sinon.spy();
+      const callback = startioIdSubmodule.getId(validConfig, consentData).callback;
+      callback(callbackSpy);
+
+      const request = server.requests[0];
+      expect(request.url).to.include('gdpr=1');
+      expect(request.url).to.include('gdpr_consent=TEST_CONSENT_STRING');
+      expect(request.url).to.include('us_privacy=1YNN');
+      expect(request.url).to.include('gpp=TEST_GPP_STRING');
+      expect(request.url).to.include('gpp_sid=7');
+    });
+
+    it('should send request without consent params when consentData is absent', function () {
+      const callbackSpy = sinon.spy();
+      const callback = startioIdSubmodule.getId(validConfig).callback;
+      callback(callbackSpy);
+
+      const request = server.requests[0];
+      expect(request.url).to.eq('https://cs.startappnetwork.com/get-uid-obj?p=m4b8b3y4');
     });
 
     it('should log error if server response is missing uid field', function () {
