@@ -80,7 +80,7 @@ function fetchIdFromServer(callback, expiresInDays, consentData) {
       callback();
     }
   };
-  ajax(url, callbacks, undefined, { method: 'GET' });
+  ajax(url, callbacks, undefined, { method: 'GET', withCredentials: true });
 }
 
 export const startioIdSubmodule = {
