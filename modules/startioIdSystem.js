@@ -1,7 +1,7 @@
 /**
  * This module adds startio ID support to the User ID module
  * The {@link module:modules/userId} module is required
- * @module modules/startioSystem
+ * @module modules/startioIdSystem
  * @requires module:modules/userId
  */
 import { logError, formatQS } from '../src/utils.js';

@@ -1,6 +1,6 @@
 import * as utils from '../../../src/utils.js';
 import { server } from 'test/mocks/xhr.js';
-import { startioIdSubmodule } from 'modules/startioSystem.js';
+import { startioIdSubmodule } from 'modules/startioIdSystem.js';
 import { createEidsArray } from '../../../modules/userId/eids.js';
 import { getStorageManager } from '../../../src/storageManager.js';
 
