@@ -15,7 +15,7 @@ The Start.io Bid Adapter enables publishers to integrate with Start.io's demand 
 To build Prebid.js with the Start.io User ID submodule and bid adapter, include the following modules:
 
 ```bash
-gulp build --modules=startioBidAdapter,userId,startioIdSystem,consentManagementTcf,consentManagementGpp,consentManagementUsp
+gulp build --modules=startioBidAdapter,userId,startioIdSystem,consentManagementTcf,consentManagementGpp,consentManagementUsp,...
 ```
 
 # Test Parameters
