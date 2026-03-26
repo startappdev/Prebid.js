@@ -4,6 +4,36 @@ The Start.io User ID submodule generates and persists a unique user identifier b
 
 For integration support, contact prebid@start.io.
 
+## Build
+
+To build Prebid.js with the Start.io User ID submodule and bid adapter, include the following modules:
+
+```bash
+gulp build --modules=startioBidAdapter,userId,startioIdSystem
+```
+
+For production environments with consent management:
+
+```bash
+gulp build --modules=startioBidAdapter,userId,startioIdSystem,consentManagementTcf,consentManagementGpp,consentManagementUsp
+```
+
+### Required Modules
+
+| Module | Description |
+| --- | --- |
+| `startioBidAdapter` | Start.io bid adapter |
+| `startioIdSystem` | Start.io User ID submodule |
+| `userId` | Core User ID module (required by `startioIdSystem`) |
+
+### Optional Modules
+
+| Module | Description |
+| --- | --- |
+| `consentManagementTcf` | TCF/GDPR consent management (recommended for EU traffic) |
+| `consentManagementGpp` | GPP consent management |
+| `consentManagementUsp` | US Privacy/CCPA consent management (recommended for US traffic) |
+
 ### Prebid Params Enabling User Sync
 
 To enable iframe-based user syncing for Start.io, include the `filterSettings` configuration in your `userSync` setup:
